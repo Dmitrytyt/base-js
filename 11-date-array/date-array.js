@@ -1,41 +1,98 @@
-const inList = ['10-02-2022', 'test', '11/12/2023', '00/13/2022', '41/12/2023', '-test'];
+const maxLength = 10;
+const separates = ['-', '/'];
+const lastSeparator = 2;
 
-const outList = inList.filter(str => str.length === 10)
-                .filter(str => str.indexOf('-', 2) !== -1 || str.indexOf('/', 2) !== -1)
-                .filter(str => {
-                    let list = str.split('-', 4);
-                    list = list.length !== 3 ? str.split('/', 4) : list;
+function isString(val) {
+    return typeof val === 'string' || val instanceof String;
+}
 
-                    if (list.length !== 3) {
-                        return false;
-                    }
+function stringError() {
+    throw new Error('Parameter is not a string!');
+}
 
-                    let [day, month, year] = list;
-            
-                    if (day.length !== 2 || month.length !== 2) {
-                        return false;
-                    }
+function hasFixedLength(val, length) {
+    return val.length === length;
+}
 
-                    if (Number(year) === NaN) {
-                        return false;
-                    }
+function hasLastSeparator(val) {
+    for (const item of separates) {
+        if (val.indexOf(item, lastSeparator) !== -1) {
+            return true;
+        }
+    }
 
-                    day = day.charAt(0) === '0' ? Number(day.charAt(1)) : Number(day);
-                    month = month.charAt(0) === '0' ? Number(month.charAt(1)) : Number(month);
+    return false;
+}
 
-                    if (day === NaN || month === NaN || day > 31 || month > 12) {
-                        return false;
-                    }
+function getFixedArray(str, maxLength) {
+    for (const item of separates) {
+        const list = str.split(item, maxLength + 1);
 
-                    return true;
-                }).map(str => {
-                    const item = str.split('/', 3);
+        if (list.length === maxLength) {
+            return list;
+        }
+    }
 
-                    if (item) {
-                        return item.join('-');
-                    }
+    return [];
+}
 
-                    return str;
-                });
+function getNumber(str) {
+    return str.charAt(0) === '0' ? Number(str.charAt(1)) : Number(str);
+}
+
+function validateRangeNumber(str, maxNum) {
+    if (str.length !== 2) {
+        return false;
+    }
+
+    const num = getNumber(str);
+
+    if (isNaN(num) || num < 1 || num > maxNum) {
+        return false;
+    }
+
+    return true;
+}
+
+function filterItems(val) {
+    if (!isString(val)) {
+        stringError();
+    }
+
+    if (!hasFixedLength(val, maxLength)) {
+        return false;
+    }
+
+    if (!hasLastSeparator(val)) {
+        return false;
+    }
+
+    const list = getFixedArray(val, lastSeparator + 1);
+
+    if (list.length === 0) {
+        return false;
+    }
+
+    const [day, month, year] = list;
+
+    if (!validateRangeNumber(day, 12) || !validateRangeNumber(month, 31) || isNaN(Number(year))) {
+        return false;
+    }
+
+    return true;
+};
+
+function slashReplace(str) {
+    const item = str.split('/', 3);
+
+    if (item.length === 3) {
+        return item.join('-');
+    }
+
+    return str;
+}
+
+const inList = ['10-02-2022', 'test', '11/12/2023', '00/13/2022', '41/12/2023', '01/00/2022', '-test'];
+const outList = inList.filter(filterItems).map(slashReplace);
 
 console.log(outList);
