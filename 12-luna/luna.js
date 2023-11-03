@@ -1,5 +1,12 @@
+function cleaner(str) {
+    if (typeof str === 'string' || str instanceof String) {
+        return str.toString().replace(/-/g, '');
+    }
+
+    return '';
+}
+
 function validate(strNum) {
-    strNum = strNum.toString().replace(/-/g, '');
     const parity = strNum.length % 2;
 
     let sum = 0;
@@ -21,4 +28,4 @@ function validate(strNum) {
     return Number(sum % 10) === 0;
 }
 
-console.log(validate('4561-2612-1234-5467'));
+console.log(validate(cleaner('4561-2612-1234-5467')));
