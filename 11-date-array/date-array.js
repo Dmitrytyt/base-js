@@ -7,7 +7,7 @@ function isString(val) {
 }
 
 function stringError() {
-    throw new Error('Parameter is not a string!');
+    throw new SyntaxError('Not a string was passed');
 }
 
 function hasFixedLength(val, length) {
@@ -56,7 +56,12 @@ function validateRangeNumber(str, maxNum) {
 
 function filterItems(val) {
     if (!isString(val)) {
-        stringError();
+        try {
+            stringError();
+        } catch (e) {
+            console.error("String Error: " + e.message);
+            return false;
+        }
     }
 
     if (!hasFixedLength(val, maxLength)) {
@@ -92,7 +97,7 @@ function slashReplace(str) {
     return str;
 }
 
-const inList = ['10-02-2022', 'test', '11/12/2023', '00/13/2022', '41/12/2023', '01/00/2022', '-test'];
+const inList = [[], '10-02-2022', 'test', '11/12/2023', '00/13/2022', '41/12/2023', '01/00/2022', '-test'];
 const outList = inList.filter(filterItems).map(slashReplace);
 
 console.log(outList);
