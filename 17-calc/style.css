@@ -1,0 +1,28 @@
+body {
+    color: #fff;
+    background: #1b1b1b;
+}
+
+input {
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 18px;
+}
+
+button {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.form {
+    margin-bottom: 25px;
+}
+
+.result {
+    margin-bottom: 25px;
+    font-size: 24px;
+    font-weight: 600;
+}
